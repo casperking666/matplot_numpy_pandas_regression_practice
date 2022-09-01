@@ -2,15 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# basically, there are two ideas I have atm to implement regression
-# one is by just manually try with different orders of functions
-# I might be able to do chebyshev with automation tho, but I wanna do the
-# simpler one first just to familiarize myself with numpy again
-# the second approach is to use gradient descent, it should be quite fun.
-# one other thing to note is that there are also 3d regression in Lawrence's lecture
-# could try that in the future.
-# I mean, still, it's a tough job, but I might actually be able to find sth out.
+"""
+This file implements a regression model that automate testing with different orders
+to find the minimum cost following a cost function.
+"""
+
+
 def add_order(X, order):
+    """
+    Adding columns of different order of xs for matrix multiplication
+    :param X:
+    :param order:
+    :return:
+    """
     temp = np.ones(X.shape)
     for i in range(order):
         temp = np.column_stack((X**(i + 1), temp))
@@ -18,6 +22,12 @@ def add_order(X, order):
 
 
 def fit_wh(X, Y):
+    """
+    Adopted normal equation
+    :param X:
+    :param Y:
+    :return: list of weights
+    """
     return np.linalg.inv(X.T @ X) @ X.T @ Y
 
 
@@ -29,6 +39,12 @@ def cubic(a, b, c, d):
 
 
 def cost_function(y_predict, y_actual):
+    """
+    Mean squared error cost function
+    :param y_predict:
+    :param y_actual:
+    :return:
+    """
     sum = 0
     length = len(y_actual)
     for i in range(length):
@@ -40,6 +56,14 @@ def cost_function(y_predict, y_actual):
 
 
 def automate_order(ord_num, xs, ys):
+    """
+    Automating different orders to find the order
+    that has the minimum cost
+    :param ord_num:
+    :param xs:
+    :param ys:
+    :return:
+    """
     cost = 10000
     index = 0
     temp_x = list()
@@ -58,9 +82,7 @@ def automate_order(ord_num, xs, ys):
 
 
 if __name__ == '__main__':
-    # xs, ys = quadratic(2, 3, 5)
-    # result = least_squares(xs, ys)
-    data = np.loadtxt('data-tp.csv', delimiter=',')
+    data = np.loadtxt('data-tp.csv', delimiter=',')  # generated from steadyStateResearch.py file
     # data = np.loadtxt('data-vos.csv', delimiter=',')
     print(data.shape)
     length = len(data[:, 0])
@@ -78,17 +100,5 @@ if __name__ == '__main__':
     plt.ylabel('Number of commutations', color='g')
     title = 'vin = 0, vos = 6, resistance = 5000, tE = 200, tP = 300-75000'
     plt.title('Commutations vs tP {}'.format(title))
-    # ax.set_xlim([-2, 20])
     plt.show()
-
-# seems like tE affects a lot on number of commutations
-# could kinda try a brute force approach
-
-# let me try one thing first, this would be kinda fun
-# so let's calculate the cost function for different orders first
-
-
-# 写得很爽 这几个方法我算是彻底玩儿明白了 下一个要干的活儿有点儿无聊
-# 感觉像是重复性工作 我暂时兴趣不大 想看下吴恩达下部分的内容 但是又有点儿累
-# 想去跟她得波几句去 但又没啥好说的 好想等着领钱啊 最好工资多点儿 虽说我确实不太配
-# 但是又还算配 毕竟我现在搞得可是高级货 这玩意儿可算有难度的 我可不只是调包侠
+    
